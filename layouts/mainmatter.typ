@@ -3,7 +3,6 @@
 #import "../utils/custom-numbering.typ": custom-numbering
 #import "../utils/custom-heading.typ": active-heading, current-heading, heading-display
 #import "../utils/unpairs.typ": unpairs
-#import "@preview/itemize:0.2.0" as el
 
 //! 正文
 //! 一级标题：中文字体为黑体，西文字体为Times New Roman，三号，大纲级别1级，居中对齐，无缩进，段前48磅，段后24磅，1.5倍行距。每一章另起一页。
@@ -33,7 +32,7 @@
   heading-align: (center, auto),
   // 页眉
   header-render: auto,
-  header-vspace: 0em,
+  header-vspace: -.5em,
   display-header: true,
   skip-on-first-level: true,
   stroke-width: .8pt,
@@ -112,21 +111,20 @@
   )
   show cite: set text(font: "Times New Roman")
 
-  //! 列表优化
-  show: el.default-enum-list.with(bottom-edge: "baseline")
   // FIXME Reference: https://github.com/Dherse/codly/issues/73 由于 Typst 的更新导致的 BUG，后续更新 codly 可以解决
-  show raw: set text(font: fonts.等宽, size: font-size.小四)
+  // show raw: set text(font: fonts.等宽, )
+  show raw: set text(font: (name: "Monaco Nerd Font Mono", covers: "latin-in-cjk"), size: font-size.小四)
   show raw.where(block: true): set par(first-line-indent: 0pt)
   show smartquote: set text(font: fonts.楷体)
   //? 3.2 脚注样式
   //! 在需要注释处标明序号，序号加圆圈放在加注处右上角，“上标”字体标注，如①。脚注中文采用宋体，英文和数字采用Times New Roman字体,小五号字，左对齐，无缩进，段前0行，段后0行，单倍行距。每页重新编号，注释序号均从①开始
   set footnote(numbering: "①")
   show footnote: set text(
-    font: ((name: "Times New Roman", covers: "latin-in-cjk"), "PingFang SC"),
+    font: fonts.宋体,
     size: font-size.小五,
   )
   show footnote.entry: set text(
-    font: ((name: "Times New Roman", covers: "latin-in-cjk"), "PingFang SC"),
+    font: fonts.宋体,
     size: font-size.小五,
   )
 
@@ -146,7 +144,6 @@
   show figure.where(kind: "algorithm"): set figure(supplement: [算法])
   show figure.where(kind: "algorithm"): set block(width: 100%)
   show figure.where(kind: "algorithm"): set align(center)
-  show figure: set text(font: fonts.宋体, size: font-size.小四)
 
   //! 表单元格内容：居中书写（上下居中，左右居中），中文为宋体，英文和数字为Times New Roman字体，五号字，居中无缩进，段前0行，段后0行，单倍行距。
   show table.cell: set align(center)
@@ -216,13 +213,12 @@
             set text(font: fonts.黑体, size: font-size.小四)
             set par(first-line-indent: 0pt, leading: leading, spacing: spacing, justify: true)
             set align(center)
-            if doctype != "bachelor" {
-              if doctype == "master" { "东北师范大学硕士学位论文" } else if doctype == "doctor" {
-                "东北师范大学博士学位论文"
-              }
-              v(header-vspace)
-              line(length: 100%, stroke: stroke-width)
-            }
+            if doctype == "master" { "东北师范大学硕士学位论文" } else if doctype == "doctor" {
+              "东北师范大学博士学位论文"
+            } else if doctype == "bachelor" { "东北师范大学学士学位论文" }
+            v(header-vspace)
+            line(length: 100%, stroke: stroke-width)
+            v(-header-vspace)
           },
           header-ascent: .25cm,
         )
