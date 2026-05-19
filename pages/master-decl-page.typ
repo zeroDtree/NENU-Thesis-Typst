@@ -8,6 +8,11 @@
 /// 硕博委员会页
 /// -> content
 #let master-decl-page(
+  /// 声明页信息，通过 @@thesis() 传入
+  /// - submit-date: 提交日期
+  /// - author_signature: 论文作者签名（可选，未设置时留空）
+  /// - teacher_signature: 指导教师签名（可选，未设置时留空）
+  /// -> dictionary
   info: (:),
   /// 自定义字体
   /// 在 @@font-size 中我们加入了一些默认值，这里用于添加自定义的字体
@@ -86,6 +91,15 @@
     )
       + info
   )
+  
+  let author_signature = {
+    let sig = info.at("author_signature", default: none)
+    if sig != none { sig } else { "" }
+  }
+  let teacher_signature = {
+    let sig = info.at("teacher_signature", default: none)
+    if sig != none { sig } else { "" }
+  }
 
 
   pagebreak(weak: true, to: if twoside { "odd" })
@@ -139,7 +153,7 @@
           row-gutter: grid-row-gutter,
           column-gutter: grid-column-gutter,
           grid.cell(justify-text("论文作者签名")),
-          info-value-cell("     "),
+          info-value-cell(author_signature),
           grid.cell(justify-text("日期")),
           info-value-cell(datetime-display(info.submit-date))
           ,
@@ -161,9 +175,9 @@
           columns: (.7fr, 1fr, .7fr, 1fr),
           column-gutter: (0em, 1em, 0em),
           grid.cell(justify-text("论文作者签名")),
-          info-value-cell("     "),
+          info-value-cell(author_signature),
           grid.cell(justify-text("指导教师签名")),
-          info-value-cell("     "),
+          info-value-cell(teacher_signature),
         ),
       )
 
